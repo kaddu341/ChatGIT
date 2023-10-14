@@ -7,7 +7,7 @@ setup(
     name='chatGIT',
     version='0.1',
     py_modules=['chatGIT'],
-    scripts=['src/chatGIT'],
+    scripts=['/src/chatGIT'],
     entry_points={
         'console_scripts': [
             'chatGIT = chatGIT:main',
