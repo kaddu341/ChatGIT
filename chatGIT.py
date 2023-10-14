@@ -1,14 +1,9 @@
-<<<<<<< HEAD
-=======
-#imports
->>>>>>> 0d167d0554a3cc277beaf87101a5d6e5daf8b521
 import openai
 import json
 import sys
 def setup():
     api_key = ''
 
-<<<<<<< HEAD
     try:
         with open("config.ini", "r") as configfile:
             api_key = configfile.read()
@@ -16,18 +11,6 @@ def setup():
         print("No ChatGPT API key found. Enter API key:")
         api_key = input("Please enter your API key")
 
-=======
-def setup():
-    api_key = ''
-
-    try:
-        with open("config.ini", "r") as configfile:
-            api_key = configfile.read()
-    except:
-        print("No ChatGPT API key found. Enter API key:")
-        api_key = input("Please enter your API key")
-
->>>>>>> 0d167d0554a3cc277beaf87101a5d6e5daf8b521
         with open("config.ini", "w") as configfile:
             configfile.write(api_key)
     return api_key
@@ -133,7 +116,6 @@ def main():
     # set API key
     openai.api_key = api_key
 
-<<<<<<< HEAD
     user_input = ''
     for i in range(1,len(sys.argv)):
         user_input += sys.argv[i] + ' '
@@ -153,14 +135,5 @@ def main():
     else:
         exit()
     
-=======
-    print("ChatGIT version 0.01\nWhat do you want to do? (0 to exit)")
-    user_input = str(input())
-
-    while user_input != "0":
-        print(run_conversation(user_input))
-        user_input = str(input())
-
->>>>>>> 0d167d0554a3cc277beaf87101a5d6e5daf8b521
 if __name__ == "__main__":
     main()
