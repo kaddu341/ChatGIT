@@ -6,8 +6,7 @@ if __name__ == "__main__":
 setup(
     name='chatGIT',
     version='0.1',
-    py_modules=['chatGIT'],
-    scripts=['chatGIT'],
+    scripts=['src/chatGIT'], #if no src, cannot find files.
     entry_points={
         'console_scripts': [
             'chatGIT = chatGIT:main',
