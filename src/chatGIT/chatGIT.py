@@ -1,6 +1,7 @@
 import openai
 import json
 import sys
+import subprocess
 def setup():
     api_key = ''
 
@@ -122,17 +123,28 @@ def main():
 
 
     output = run_conversation(user_input)
-    print(output)
-    print("Are these commands okay to execute? (y/n)")
+    print_statement = '\033[94m'
+    for i in output:
+        for j in i:
+            print_statement += j + " "
+        print_statement += "\n"
+    print_statement += '\033[0m'
+    print()
+    print(print_statement)
 
-
-
+    print("Are these commands okay to execute? (y/n)", end=" ")
     confirmation = input()
 
     if 'y' in confirmation:
-        x = 1 #replace this line with the shell commands    
+        try:
+            for command in output:                
+                subprocess.run(command, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f'Command {e.cmd} failed with error {e.returncode}')
     else:
         exit()
     
 if __name__ == "__main__":
     main()
+
+
