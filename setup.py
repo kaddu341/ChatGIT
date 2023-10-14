@@ -1,5 +1,10 @@
-import setuptools
-setuptools.setup(
+from setuptools import setup
+
+def readfile(filename):
+    with open(filename, 'r+') as f:
+        return f.read()
+
+setup(
     name='chatGIT',
     version='0.1',
     py_modules=['chatGIT'],
