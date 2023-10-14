@@ -1,6 +1,6 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "chatGIT"
@@ -23,3 +23,6 @@ classifiers = [
 
 [project.urls]
 "Homepage" = "https://github.com/kaddu341/ChatGIT"
+
+[project.scripts]
+chatGIT = "chatGIT:main"
