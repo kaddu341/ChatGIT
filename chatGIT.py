@@ -98,8 +98,7 @@ def run_conversation(user_input):
             messages=messages,
         )  # get a new response from GPT where it can see the function response
         return second_response
-    else:
-        return response_message
+    return response_message
 
 def main():
     api_key = ''
@@ -122,8 +121,8 @@ def main():
     
 
 
-  
-    print(run_conversation(user_input))
+    output = run_conversation(user_input)
+    print(output)
     print("Are these commands okay to execute? (y/n)")
 
 
