@@ -1,35 +1,20 @@
 #imports
-import sys
-import os
-import configparser
 import openai
 import json
 
+def setup():
+    api_key = ''
 
-phrase = ''
-for i in range(1,len(sys.argv)):
-    phrase += sys.argv[i] + ' '
+    try:
+        with open("config.ini", "r") as configfile:
+            api_key = configfile.read()
+    except:
+        print("No ChatGPT API key found. Enter API key:")
+        api_key = input("Please enter your API key")
 
-# Get the user's home directory
-user_home = os.path.expanduser("~")
-
-# Define the path to the configuration file
-config_file_path = "config.ini"
-
-# Read the API key from the configuration file
-config = configparser.ConfigParser()
-config.read(config_file_path)
-api_key = config.get("API", "api_key")
-
-if(api_key == 'none'):
-    print("No ChatGPT API key found. Enter API key:")
-    api_key = input("Please enter your API key")
-
-with open(config_file_path, "w") as configfile:
-    config.write(api_key)
-    
-# send "phrase to chatGPT"
-openai.api_key = api_key
+        with open("config.ini", "w") as configfile:
+            configfile.write(api_key)
+    return api_key
 
 #function to be called by ChatGPT
 def generate_git_commands(task: str, file: str, msg = ""):
@@ -49,9 +34,9 @@ def generate_git_commands(task: str, file: str, msg = ""):
     return json.dumps(git_info)
 
 #user-AI conversation, adapted from https://platform.openai.com/docs/guides/gpt/function-calling
-def run_conversation():
+def run_conversation(user_input):
     # Step 1: send the conversation and available functions to GPT
-    messages = [{"role": "user", "content": phrase}]
+    messages = [{"role": "user", "content": user_input}]
     functions = [
         {
             "name": "generate_git_commands",
@@ -117,4 +102,27 @@ def run_conversation():
     else:
         return response_message
 
-print(run_conversation())
+def main():
+    api_key = ''
+    try:
+        with open("config.txt", "r") as configfile:
+            api_key = configfile.read()
+    except:
+        print("No ChatGPT API key found. Enter API key:")
+        api_key = input("Please enter your API key")
+
+        with open("config.txt", "w") as configfile:
+            configfile.write(api_key)
+    
+    # set API key
+    openai.api_key = api_key
+
+    print("ChatGIT version 0.01\nWhat do you want to do? (0 to exit)")
+    user_input = str(input())
+
+    while user_input != "0":
+        print(run_conversation(user_input))
+        user_input = str(input())
+
+if __name__ == "__main__":
+    main()
