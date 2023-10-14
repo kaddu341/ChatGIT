@@ -1,7 +1,6 @@
-#imports
 import openai
 import json
-
+import sys
 def setup():
     api_key = ''
 
@@ -117,12 +116,24 @@ def main():
     # set API key
     openai.api_key = api_key
 
-    print("ChatGIT version 0.01\nWhat do you want to do? (0 to exit)")
-    user_input = str(input())
+    user_input = ''
+    for i in range(1,len(sys.argv)):
+        user_input += sys.argv[i] + ' '
+    
 
-    while user_input != "0":
-        print(run_conversation(user_input))
-        user_input = str(input())
 
+  
+    print(run_conversation(user_input))
+    print("Are these commands okay to execute? (y/n)")
+
+
+
+    confirmation = input()
+
+    if 'y' in confirmation:
+        x = 1 #replace this line with the shell commands    
+    else:
+        exit()
+    
 if __name__ == "__main__":
     main()
