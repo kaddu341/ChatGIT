@@ -1,6 +1,8 @@
 #imports
 import openai
 import json
+import re
+from sample_responses import generate_git_commands, samples
 
 def setup():
     api_key = ''
@@ -16,27 +18,75 @@ def setup():
             configfile.write(api_key)
     return api_key
 
-#function to be called by ChatGPT
-def generate_git_commands(task: str, file: str, msg = ""):
-    git_info = []
-    match task:
-        case "push":
-            git_info = ["git add " + file, 'git commit -m "' + msg + '"', 'git push']
-        case "pull":
-            git_info = ["git pull"]
-        case "add":
-            git_info = ["git add " + file]
-        case "commit":
-            git_info = ['git commit -m "' + msg + '"']
-        case "initialize":
-            git_info = ["git init"]
-        #case _:
-    return json.dumps(git_info)
-
 #user-AI conversation, adapted from https://platform.openai.com/docs/guides/gpt/function-calling
 def run_conversation(user_input):
+    #build a sample list of messages
+    messages=[
+        {"role": "system", "content": "Generate a series of git commands based on the user's input. Only use the functions you have been provided with."},
+        {"role": "user", "content": samples[0]},
+        {"role": "assistant", "content": samples[1]},
+        {"role": "user", "content": samples[2]},
+        {"role": "assistant", "content": samples[3]},
+        {"role": "user", "content": samples[4]},
+        {"role": "assistant", "content": samples[5]},
+        {"role": "user", "content": samples[6]},
+        {"role": "assistant", "content": samples[7]},
+        {"role": "user", "content": samples[8]},
+        {"role": "assistant", "content": samples[9]},
+        {"role": "user", "content": samples[10]},
+        {"role": "assistant", "content": samples[11]},
+        {"role": "user", "content": samples[12]},
+        {"role": "assistant", "content": samples[13]},
+        {"role": "user", "content": samples[14]},
+        {"role": "assistant", "content": samples[15]},
+        {"role": "user", "content": samples[16]},
+        {"role": "assistant", "content": samples[17]},
+        {"role": "user", "content": samples[18]},
+        {"role": "assistant", "content": samples[19]},
+        {"role": "user", "content": samples[20]},
+        {"role": "assistant", "content": samples[21]},
+        {"role": "user", "content": samples[22]},
+        {"role": "assistant", "content": samples[23]},
+        {"role": "user", "content": samples[24]},
+        {"role": "assistant", "content": samples[25]},
+        {"role": "user", "content": samples[26]},
+        {"role": "assistant", "content": samples[27]},
+        {"role": "user", "content": samples[28]},
+        {"role": "assistant", "content": samples[29]},
+        {"role": "user", "content": samples[30]},
+        {"role": "assistant", "content": samples[31]},
+        {"role": "user", "content": samples[32]},
+        {"role": "assistant", "content": samples[33]},
+        {"role": "user", "content": samples[34]},
+        {"role": "assistant", "content": samples[35]},
+        {"role": "user", "content": samples[36]},
+        {"role": "assistant", "content": samples[37]},
+        {"role": "user", "content": samples[38]},
+        {"role": "assistant", "content": samples[39]},
+        {"role": "user", "content": samples[40]},
+        {"role": "assistant", "content": samples[41]},
+        {"role": "user", "content": samples[42]},
+        {"role": "assistant", "content": samples[43]},
+        {"role": "user", "content": samples[44]},
+        {"role": "assistant", "content": samples[45]},
+        {"role": "user", "content": samples[46]},
+        {"role": "assistant", "content": samples[47]},
+        {"role": "user", "content": samples[48]},
+        {"role": "assistant", "content": samples[49]},
+        {"role": "user", "content": samples[50]},
+        {"role": "assistant", "content": samples[51]},
+        {"role": "user", "content": samples[52]},
+        {"role": "assistant", "content": samples[53]},
+        {"role": "user", "content": samples[54]},
+        {"role": "assistant", "content": samples[55]},
+        {"role": "user", "content": samples[56]},
+        {"role": "assistant", "content": samples[57]},
+        {"role": "user", "content": samples[58]},
+        {"role": "assistant", "content": samples[59]},
+        {"role": "user", "content": user_input}
+    ]
+    
     # Step 1: send the conversation and available functions to GPT
-    messages = [{"role": "user", "content": user_input}]
     functions = [
         {
             "name": "generate_git_commands",
@@ -48,16 +98,16 @@ def run_conversation(user_input):
                         "type": "string",
                         "description": "The intended task to be achieved",
                     },
-                    "file": {
+                    "identifier": {
                         "type": "string",
-                        "description": "The name of the file",
+                        "description": "The name of the file or branch",
                     },
-                    "msg": {
+                    "data": {
                         "type": "string",
-                        "description": "An optional commit message",
+                        "description": "A name, email, URL, or an optional commit message",
                     },
                 },
-                "required": ["task", "file"],
+                "required": ["task"],
             },
         }
     ]
@@ -81,8 +131,8 @@ def run_conversation(user_input):
         function_args = json.loads(response_message["function_call"]["arguments"])
         function_response = function_to_call(
             task=function_args.get("task"),
-            file=function_args.get("file"),
-            msg=function_args.get("msg"),
+            identifier=function_args.get("identifier"),
+            data=function_args.get("data"),
         )
 
         # Step 4: send the info on the function call and function response to GPT
@@ -98,9 +148,9 @@ def run_conversation(user_input):
             model="gpt-3.5-turbo-0613",
             messages=messages,
         )  # get a new response from GPT where it can see the function response
-        return second_response
+        return second_response["choices"][0]["message"]["content"]
     else:
-        return response_message
+        return response_message["content"]
 
 def main():
     api_key = ''
@@ -121,7 +171,17 @@ def main():
     user_input = str(input())
 
     while user_input != "0":
-        print(run_conversation(user_input))
+        output = str(run_conversation(user_input))
+        with open("output.txt", "a") as configfile:
+            configfile.write('\n' + output)
+        
+        """
+        pattern = r'^git.*\n'
+        matches = re.findall(pattern, output, re.MULTILINE)
+        if len(matches) > 0:
+            for match in matches:
+                print(match.strip())"""
+        
         user_input = str(input())
 
 if __name__ == "__main__":
