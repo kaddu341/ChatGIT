@@ -101,7 +101,7 @@ def run_conversation(user_input):
         return second_response
     return response_message
 
-def main():
+def main_helper():
     api_key = ''
     try:
         with open("config.txt", "r") as configfile:
@@ -119,8 +119,6 @@ def main():
     user_input = ''
     for i in range(1,len(sys.argv)):
         user_input += sys.argv[i] + ' '
-    
-
 
     output = run_conversation(user_input)
     print_statement = '\033[94m'
