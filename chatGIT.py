@@ -3,23 +3,30 @@ import openai
 import json
 import re
 import subprocess
+from termcolor import colored
 from sample_responses import generate_git_commands, samples
 
-"""
-def setup():
-    api_key = ''
+#improve aesthetics
+def pretty_print_conversation(messages):
+    role_to_color = {
+        "system": "red",
+        "user": "green",
+        "assistant": "blue",
+        "function": "magenta",
+    }
+    
+    for message in messages:
+        if message["role"] == "system":
+            print(colored(f"system: {message['content']}\n", role_to_color[message["role"]]))
+        elif message["role"] == "user":
+            print(colored(f"user: {message['content']}\n", role_to_color[message["role"]]))
+        elif message["role"] == "assistant" and message.get("function_call"):
+            print(colored(f"assistant: {message['function_call']}\n", role_to_color[message["role"]]))
+        elif message["role"] == "assistant" and not message.get("function_call"):
+            print(colored(f"assistant: {message['content']}\n", role_to_color[message["role"]]))
+        elif message["role"] == "function":
+            print(colored(f"function ({message['name']}): {message['content']}\n", role_to_color[message["role"]]))
 
-    try:
-        with open("config.ini", "r") as configfile:
-            api_key = configfile.read()
-    except:
-        print("No ChatGPT API key found. Enter API key:")
-        api_key = input("Please enter your API key")
-
-        with open("config.ini", "w") as configfile:
-            configfile.write(api_key)
-    return api_key
-"""
 
 #user-AI conversation, adapted from https://platform.openai.com/docs/guides/gpt/function-calling
 def run_conversation(user_input):
@@ -164,10 +171,11 @@ def parse_output(output: str):
     #single line
     if len(output.splitlines()) == 1:
         if "git" in output:
-            git_cmd_list = [output]
+            git_cmd_list = [output.strip()]
     else: #multiline
         if "`" in output:
             git_cmd_list = re.findall(backtick_pattern, output)
+    print()
     print(output.replace("`", ""))
     return git_cmd_list
 
@@ -196,7 +204,7 @@ def main():
         if len(git_commands) != 0:
             choice = ""
             while choice != "y" and choice != "n":
-                print("Are you ok with these commands to be executed? (y/n)")
+                print("\nAre you ok with these commands to be executed? (y/n)", end = " ")
                 choice = str(input())
                 try:
                     choice = choice.lower()
@@ -212,6 +220,7 @@ def main():
                 else:
                     print("Invalid input")
         
+        print()
         user_input = str(input())
 
 if __name__ == "__main__":
