@@ -3,30 +3,11 @@ import openai
 import json
 import re
 import subprocess
-from termcolor import colored
+from termcolor import cprint
+from colorama import Fore, init
 from sample_responses import generate_git_commands, samples
 
-#improve aesthetics
-def pretty_print_conversation(messages):
-    role_to_color = {
-        "system": "red",
-        "user": "green",
-        "assistant": "blue",
-        "function": "magenta",
-    }
-    
-    for message in messages:
-        if message["role"] == "system":
-            print(colored(f"system: {message['content']}\n", role_to_color[message["role"]]))
-        elif message["role"] == "user":
-            print(colored(f"user: {message['content']}\n", role_to_color[message["role"]]))
-        elif message["role"] == "assistant" and message.get("function_call"):
-            print(colored(f"assistant: {message['function_call']}\n", role_to_color[message["role"]]))
-        elif message["role"] == "assistant" and not message.get("function_call"):
-            print(colored(f"assistant: {message['content']}\n", role_to_color[message["role"]]))
-        elif message["role"] == "function":
-            print(colored(f"function ({message['name']}): {message['content']}\n", role_to_color[message["role"]]))
-
+init() #for colorama
 
 #user-AI conversation, adapted from https://platform.openai.com/docs/guides/gpt/function-calling
 def run_conversation(user_input):
@@ -175,8 +156,8 @@ def parse_output(output: str):
     else: #multiline
         if "`" in output:
             git_cmd_list = re.findall(backtick_pattern, output)
-    print()
-    print(output.replace("`", ""))
+
+    cprint('\n'+output.replace("`", ""), 'green', attrs=['bold'])
     return git_cmd_list
 
 def main():
@@ -185,7 +166,7 @@ def main():
         with open("config.txt", "r") as configfile:
             api_key = configfile.read()
     except:
-        print("No ChatGPT API key found. Enter API key:")
+        cprint("No ChatGPT API key found. Enter API key: ", 'magenta')
         api_key = input("Please enter your API key")
 
         with open("config.txt", "w") as configfile:
@@ -194,8 +175,8 @@ def main():
     # set API key
     openai.api_key = api_key
 
-    print("ChatGIT version 0.01\nWhat do you want to do? (0 to exit)")
-    user_input = str(input())
+    cprint("ChatGIT version 0.01\nWhat do you want to do? (0 to exit)", 'magenta')
+    user_input = str(input(Fore.YELLOW))
 
     while user_input != "0":
         output = str(run_conversation(user_input))
@@ -204,24 +185,24 @@ def main():
         if len(git_commands) != 0:
             choice = ""
             while choice != "y" and choice != "n":
-                print("\nAre you ok with these commands to be executed? (y/n)", end = " ")
-                choice = str(input())
+                cprint("\nAre you ok with these commands to be executed? (y/n)", 'magenta', end = " ",)
+                choice = str(input(Fore.YELLOW))
                 try:
                     choice = choice.lower()
                 except:
-                    print("Invalid input")
+                    cprint("Invalid input", 'red', attrs=['bold'])
                 
                 if choice == "y":
                     for cmd in git_commands:
                         running_list = cmd.split()
                         subprocess.run(running_list)
                 elif choice == "n":
-                    print("Operation aborted")
+                    cprint("Operation aborted", 'magenta')
                 else:
-                    print("Invalid input")
+                    cprint("Invalid input", 'red', attrs=['bold'])
         
         print()
-        user_input = str(input())
+        user_input = str(input(Fore.YELLOW))
 
 if __name__ == "__main__":
     main()
