@@ -17,3 +17,19 @@ git merge [branch_name]
 
 Replace [branch_name] with the name of the branch you want to merge into your current branch.
 The stash in Git allows you to temporarily save changes that you have made to your working directory, without committing them. This is useful when you need to switch to a different branch or work on a different task, but don't want to commit your current changes yet. You can later apply the stash and continue working on those changes.
+git push origin master
+Here are the commands to push `abc.txt` to GitHub:
+
+1. `git add abc.txt`
+2. `git commit -m "[Commit Message]"`
+3. `git push`
+
+Make sure to replace `[Commit Message]` with a descriptive commit message.
+git pull origin master
+git merge abc
+Hola! ¿En qué puedo ayudarte hoy?
+Sure, what would you like to name the new branch?
+The command to create a new branch named "awwab" is `git branch awwab`.
+You're welcome! If you have any more questions, feel free to ask.
+I am a language model trained to assist with various tasks, including generating git commands based on user input.
+I'm sorry, but I am unable to execute that command for you.

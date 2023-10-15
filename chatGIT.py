@@ -2,8 +2,10 @@
 import openai
 import json
 import re
+import subprocess
 from sample_responses import generate_git_commands, samples
 
+"""
 def setup():
     api_key = ''
 
@@ -17,6 +19,7 @@ def setup():
         with open("config.ini", "w") as configfile:
             configfile.write(api_key)
     return api_key
+"""
 
 #user-AI conversation, adapted from https://platform.openai.com/docs/guides/gpt/function-calling
 def run_conversation(user_input):
@@ -96,6 +99,7 @@ def run_conversation(user_input):
                 "properties": {
                     "task": {
                         "type": "string",
+                        "enum": ["push", "push-all", "pull", "add", "add-all", "commit-all", "commit", "initialize", "clone", "set-name", "set-email", "set-color", "show-status", "reset-commit", "show-changes", "show-staged-changes", "list-branches", "new-branch", "switch-new-branch", "switch-branch", "merge", "show-commits", "stash", "show-stash", "discard-stash", "get-stash-top"],
                         "description": "The intended task to be achieved",
                     },
                     "identifier": {
@@ -152,6 +156,21 @@ def run_conversation(user_input):
     else:
         return response_message["content"]
 
+def parse_output(output: str):
+    # Define a regular expression pattern to match words between backticks
+    backtick_pattern = r'`([^`]+)`'
+
+    git_cmd_list = []
+    #single line
+    if len(output.splitlines()) == 1:
+        if "git" in output:
+            git_cmd_list = [output]
+    else: #multiline
+        if "`" in output:
+            git_cmd_list = re.findall(backtick_pattern, output)
+    print(output.replace("`", ""))
+    return git_cmd_list
+
 def main():
     api_key = ''
     try:
@@ -172,15 +191,26 @@ def main():
 
     while user_input != "0":
         output = str(run_conversation(user_input))
-        with open("output.txt", "a") as configfile:
-            configfile.write('\n' + output)
-        
-        """
-        pattern = r'^git.*\n'
-        matches = re.findall(pattern, output, re.MULTILINE)
-        if len(matches) > 0:
-            for match in matches:
-                print(match.strip())"""
+        git_commands = parse_output(output=output)
+
+        if len(git_commands) != 0:
+            choice = ""
+            while choice != "y" and choice != "n":
+                print("Are you ok with these commands to be executed? (y/n)")
+                choice = str(input())
+                try:
+                    choice = choice.lower()
+                except:
+                    print("Invalid input")
+                
+                if choice == "y":
+                    for cmd in git_commands:
+                        running_list = cmd.split()
+                        subprocess.run(running_list)
+                elif choice == "n":
+                    print("Operation aborted")
+                else:
+                    print("Invalid input")
         
         user_input = str(input())
 
