@@ -144,6 +144,14 @@ def run_conversation(user_input):
     else:
         return response_message["content"]
 
+def split_cmd(line: str):
+    if '"' in line:
+        alist = line[0:line.find('"')].strip().split()
+        alist.append(line[line.find('"'):])
+    else:
+        alist = line.split()
+    return alist
+
 def parse_output(output: str):
     # Define a regular expression pattern to match words between backticks
     backtick_pattern = r'`([^`]+)`'
@@ -156,8 +164,13 @@ def parse_output(output: str):
     else: #multiline
         if "`" in output:
             git_cmd_list = re.findall(backtick_pattern, output)
-
+    #make sure the list consists of only git commands
+    for cmd in git_cmd_list:
+        if "git" not in cmd:
+            git_cmd_list.remove(cmd)
+    #print output
     cprint('\n'+output.replace("`", ""), 'green', attrs=['bold'])
+    git_cmd_list = [split_cmd(cmd) for cmd in git_cmd_list]
     return git_cmd_list
 
 def main():
@@ -194,8 +207,8 @@ def main():
                 
                 if choice == "y":
                     for cmd in git_commands:
-                        running_list = cmd.split()
-                        subprocess.run(running_list)
+                        print(cmd)
+                        subprocess.run(cmd)
                 elif choice == "n":
                     cprint("Operation aborted", 'magenta')
                 else:
