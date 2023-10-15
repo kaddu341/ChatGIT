@@ -26,7 +26,14 @@ Deploy and utilize across various platforms and operating systems.
 To install ChatGIT using `pip`:
 
 ```bash
-pip install chatGIT
+pip install git+https://github.com/kaddu341/ChatGIT.git
+```
+If on windows, make sure to add the generated exe to your PATH environment variable!
+
+Afterwards, use chatGIT like so:
+
+```bash
+chatGIT <phrase>
 ```
 
 ## License
