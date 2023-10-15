@@ -1,28 +1,17 @@
-import re
+import subprocess
 
-def parse_output(output: str):
-    # Define a regular expression pattern to match words between backticks
-    backtick_pattern = r'`([^`]+)`'
-
-    git_cmd_list = []
-    #single line
-    if len(output.splitlines()) == 1:
-        if "git" in output:
-            git_cmd_list = [output]
-    else: #multiline
-        if "`" in output:
-            git_cmd_list = re.findall(backtick_pattern, output)
-    print(output.replace("`", ""))
-    return git_cmd_list
-
-myinput = """
-Here are the commands to push all your changes to GitHub:
-
-1. `git add .` (to add all changes)
-2. `git commit -m "origin"` (to commit changes with the message "origin")
-3. `git push` (to push changes to GitHub)
-
-Please make sure you are in the appropriate branch before executing these commands.
+astring = """git add output.txt
+git commit -m "Updated output.txt"
+git push
 """
-alist = parse_output(myinput)
-print(alist)
+arr = astring.splitlines()
+def split_cmd(line: str):
+    if '"' in line:
+        alist = line[0:line.find('"')].strip().split()
+        alist.append(line[line.find('"'):])
+    else:
+        alist = line.split()
+    return alist
+
+arr = [split_cmd(line) for line in arr]
+print(arr)
