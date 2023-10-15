@@ -144,6 +144,7 @@ def run_conversation(user_input):
     else:
         return response_message["content"]
 
+#splits a git command into a list of individual args for the subprocess.run() function later on
 def split_cmd(line: str):
     if '"' in line:
         alist = line[0:line.find('"')].strip().split()
@@ -170,7 +171,7 @@ def parse_output(output: str):
             git_cmd_list.remove(cmd)
     #print output
     cprint('\n'+output.replace("`", ""), 'green', attrs=['bold'])
-    git_cmd_list = [split_cmd(cmd) for cmd in git_cmd_list]
+    git_cmd_list = [split_cmd(cmd) for cmd in git_cmd_list] #make a 2D array
     return git_cmd_list
 
 def main():
