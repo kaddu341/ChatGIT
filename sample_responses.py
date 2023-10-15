@@ -4,65 +4,65 @@ samples = [
 """push [FILE].xyz to github with the commit message "Hello World" """,
 
 """
-git add [FILE].xyz
-git commit text.txt -m "Hello World"
-git push
+`git add [FILE].xyz`
+`git commit text.txt -m "Hello World"`
+`git push`
 """,
 
 """push the file text.txt to my repo with the message "Hola" """,
 
 """
-git add text.txt
-git commit text.txt -m "Hola"
-git push
+`git add text.txt`
+`git commit text.txt -m "Hola"`
+`git push`
 """,
 
 """push myprogram.py, message is "My first commit" """,
 
 """
-git add myprogram.py
-git commit myprogram.py -m "My first commit"
-git push
+`git add myprogram.py`
+`git commit myprogram.py -m "My first commit"`
+`git push`
 """,
 
 """push somefile.cpp to github w/ msg "Finished for today" """,
 
 """
-git add somefile.cpp
-git commit somefile.cpp -m "Finished for today"
-git push
+`git add somefile.cpp`
+`git commit somefile.cpp -m "Finished for today"`
+`git push`
 """,
 
 """push all my changes to github""",
 
 """
-git add .
-git commit text.txt -m "Added all changes"
-git push
+`git add .`
+`git commit text.txt -m "Added all changes"`
+`git push`
 """,
 
 """commit all my changes""",
 
 """
-git commit -a -m "Committed all changes"
+`git commit -a -m "Committed all changes"`
 """,
 
 """pull changes from repo""",
 
 """
-git pull
+`git pull`
 """,
 
 """switch to a new branch called my_branch_name""",
 
 """
-git checkout -b my_branch_name
+`git checkout -b my_branch_name`
 """,
 
 """show current status""",
 
 """
-git status
+`git status`
 """,
 
 """add my name to git config""",
@@ -73,7 +73,7 @@ what is your name?
 
 """first last""",
 
-"""git config --global user.name "first last" """,
+"""`git config --global user.name "first last"`""",
 
 """add my email to git config""",
 
@@ -81,11 +81,11 @@ what is your name?
 
 """someone@example.com""",
 
-"""git config --global user.email “someone@example.com”""",
+"""`git config --global user.email “someone@example.com”`""",
 
 """make the git command line prettier""",
 
-"""git config --global color.ui auto""",
+"""`git config --global color.ui auto`""",
 
 """clone my repo into the local folder""",
 
@@ -93,27 +93,27 @@ what is your name?
 
 """https://github.com/mrcomputernerd/coolprojecT.git""",
 
-"""git clone https://github.com/mrcomputernerd/coolprojecT.git""",
+"""`git clone https://github.com/mrcomputernerd/coolprojecT.git`""",
 
 """show me a list of files in the staging area""",
 
-"""git ls-files""",
+"""`git ls-files`""",
 
 """go back to the previous commit""",
 
-"""git reset""",
+"""`git reset`""",
 
 """show me all branches in this project""",
 
-"""git branch""",
+"""`git branch`""",
 
 """switch to xyz branch""",
 
-"""git checkout xyz""",
+"""`git checkout xyz`""",
 
 """merge abc into this branch""",
 
-"""git merge abc""",
+"""`git merge abc`""",
 
 """make a new branch""",
 
@@ -121,35 +121,35 @@ what is your name?
 
 """awwab""",
 
-"""git branch awwab""",
+"""`git branch awwab`""",
 
 """show me all commits""",
 
-"""git log""",
+"""`git log`""",
 
 """show me what have I just changed in my files?""",
 
-"""git diff""",
+"""`git diff`""",
 
 """show me the differences in files in the staging area""",
 
-"""git diff --staged""",
+"""`git diff --staged`""",
 
 """temporarily store my changes""",
 
-"""git stash""",
+"""`git stash`""",
 
 """list the changes I have stashed""",
 
-"""git stash list""",
+"""`git stash list`""",
 
 """discard changes from the top of the stash""",
 
-"""git stash drop""",
+"""`git stash drop`""",
 
 """get the change at the top of the stash""",
 
-"""git stash pop""",
+"""`git stash pop`""",
                     ]
 
 #function to be called by ChatGPT

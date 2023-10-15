@@ -158,13 +158,9 @@ def parse_output(output: str):
     backtick_pattern = r'`([^`]+)`'
 
     git_cmd_list = []
-    #single line
-    if len(output.splitlines()) == 1:
-        if "git" in output:
-            git_cmd_list = [output.strip()]
-    else: #multiline
-        if "`" in output:
-            git_cmd_list = re.findall(backtick_pattern, output)
+    #chatGPT prints code snippets between tick (`) marks
+    if "`" in output:
+        git_cmd_list = re.findall(backtick_pattern, output)
     #make sure the list consists of only git commands
     for cmd in git_cmd_list:
         if "git" not in cmd:
