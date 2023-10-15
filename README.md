@@ -2,7 +2,7 @@
 
 ## Description
 
-chatGIT is a python package that utilizes
+chatGIT is a python package that utilizes chatGPT to automatically generate commands
 
 ## Features
 
