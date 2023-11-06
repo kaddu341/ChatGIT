@@ -6,6 +6,8 @@ import subprocess
 from termcolor import cprint
 from colorama import Fore, init
 from sample_responses import generate_git_commands, samples
+import time
+import random
 
 init() #for colorama
 
@@ -109,12 +111,24 @@ def run_conversation(user_input):
             },
         }
     ]
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-0613",
-        messages=messages,
-        functions=functions,
-        function_call="auto",  # auto is default, but we'll be explicit
-    )
+    
+    #add logic to mitigate errors due to rate limits, taken from https://community.openai.com/t/openai-error-serviceunavailableerror-the-server-is-overloaded-or-not-ready-yet/32670/19
+    for delay_secs in (2**x for x in range(0, 6)):
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo-0613",
+                messages=messages,
+                functions=functions,
+                function_call="auto",  # auto is default, but we'll be explicit
+            )
+            break
+        except openai.OpenAIError as e:
+            randomness_collision_avoidance = random.randint(0, 1000) / 1000.0
+            sleep_dur = delay_secs + randomness_collision_avoidance
+            cprint(f"Error: {e}. Retrying in {round(sleep_dur, 2)} seconds.", 'red', attrs=['bold'])
+            time.sleep(sleep_dur)
+            continue
+    
     response_message = response["choices"][0]["message"]
 
     # Step 2: check if GPT wanted to call a function
@@ -142,10 +156,21 @@ def run_conversation(user_input):
                 "content": function_response,
             }
         )  # extend conversation with function response
-        second_response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-0613",
-            messages=messages,
-        )  # get a new response from GPT where it can see the function response
+
+        for delay_secs in (2**x for x in range(0, 6)):
+            try:
+                second_response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo-0613",
+                    messages=messages,
+                )  # get a new response from GPT where it can see the function response
+                break
+            except openai.OpenAIError as e:
+                randomness_collision_avoidance = random.randint(0, 1000) / 1000.0
+                sleep_dur = delay_secs + randomness_collision_avoidance
+                cprint(f"Error: {e}. Retrying in {round(sleep_dur, 2)} seconds.", 'red', attrs=['bold'])
+                time.sleep(sleep_dur)
+                continue
+        
         return second_response["choices"][0]["message"]["content"]
     else:
         return response_message["content"]
@@ -218,7 +243,6 @@ def main():
                     cprint("Invalid input", 'red', attrs=['bold'])
         
         print()
-        cprint("Is there anything else you want to do?", 'magenta')
         user_input = str(input(Fore.YELLOW))
 
 if __name__ == "__main__":
