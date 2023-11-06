@@ -150,6 +150,18 @@ what is your name?
 """get the change at the top of the stash""",
 
 """`git stash pop`""",
+
+"""no man""", #a bunch of nonsensical inputs so the model knows how to respond
+
+"""Sorry, I didn't understand your input. I am an AI tool for generating GIT commands. If you would like to exit the program, please enter 0.""",
+
+"""vjjijwa0""",
+
+"""Sorry, I didn't understand your input. I am an AI tool for generating GIT commands. If you would like to exit the program, please enter 0.""",
+
+"""really?""",
+
+"""Sorry, I didn't understand your input. I am an AI tool for generating GIT commands. If you would like to exit the program, please enter 0.""",
                     ]
 
 #function to be called by ChatGPT
@@ -214,5 +226,7 @@ def generate_git_commands(task: str, identifier: str = "", data = ""):
             git_info = ['git stash drop']
         case "get-stash-top":
             git_info = ['git stash pop']
+        case _:
+            git_info = []
     
     return json.dumps(git_info)

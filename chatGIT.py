@@ -74,6 +74,12 @@ def run_conversation(user_input):
         {"role": "assistant", "content": samples[57]},
         {"role": "user", "content": samples[58]},
         {"role": "assistant", "content": samples[59]},
+        {"role": "user", "content": samples[59]},
+        {"role": "assistant", "content": samples[60]},
+        {"role": "user", "content": samples[61]},
+        {"role": "assistant", "content": samples[62]},
+        {"role": "user", "content": samples[63]},
+        {"role": "assistant", "content": samples[64]},
         {"role": "user", "content": user_input}
     ]
     
@@ -87,7 +93,7 @@ def run_conversation(user_input):
                 "properties": {
                     "task": {
                         "type": "string",
-                        "enum": ["push", "push-all", "pull", "add", "add-all", "commit-all", "commit", "initialize", "clone", "set-name", "set-email", "set-color", "show-status", "reset-commit", "show-changes", "show-staged-changes", "list-branches", "new-branch", "switch-new-branch", "switch-branch", "merge", "show-commits", "stash", "show-stash", "discard-stash", "get-stash-top"],
+                        "enum": ["push", "push-all", "pull", "add", "add-all", "commit-all", "commit", "initialize", "clone", "set-name", "set-email", "set-color", "show-status", "reset-commit", "show-changes", "show-staged-changes", "list-branches", "new-branch", "switch-new-branch", "switch-branch", "merge", "show-commits", "stash", "show-stash", "discard-stash", "get-stash-top", "other"],
                         "description": "The intended task to be achieved",
                     },
                     "identifier": {
@@ -212,6 +218,7 @@ def main():
                     cprint("Invalid input", 'red', attrs=['bold'])
         
         print()
+        cprint("Is there anything else you want to do?", 'magenta')
         user_input = str(input(Fore.YELLOW))
 
 if __name__ == "__main__":
